@@ -1,6 +1,6 @@
-#### Array <-> XML conversion package
+#### Guzzle Adapter for PSR-18
 
-Lightweight XML parser
+Wrapper over Guzzle to comply with PSR-18
 
 Current build status
 ===
