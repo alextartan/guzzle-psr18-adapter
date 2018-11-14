@@ -29,11 +29,11 @@ final class Client extends GuzzleClient implements ClientInterface
         try {
             return $this->send($request);
         } catch (GuzzleClientException $gCliEx) {
-            throw ClientException::fromRequest($request, $gCliEx->getMessage(), $gCliEx->getCode(), $gCliEx);
+            throw ClientException::fromRequest($request, $gCliEx->getMessage(), $gCliEx->getCode());
         } catch (GuzzleConnectException $gConEx) {
-            throw NetworkException::fromRequest($request, $gConEx->getMessage(), $gConEx->getCode(), $gConEx);
+            throw NetworkException::fromRequest($request, $gConEx->getMessage(), $gConEx->getCode());
         } catch (GuzzleRequestException $gReqEx) {
-            throw RequestException::fromRequest($request, $gReqEx->getMessage(), $gReqEx->getCode(), $gReqEx);
+            throw RequestException::fromRequest($request, $gReqEx->getMessage(), $gReqEx->getCode());
         }
     }
 }
