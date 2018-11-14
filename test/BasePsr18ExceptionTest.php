@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace AlexTartanTest\GuzzlePsr18Adapter;
 
+use AlexTartan\GuzzlePsr18Adapter\BasePsr18Exception;
 use AlexTartan\GuzzlePsr18Adapter\ClientException;
 use AlexTartan\GuzzlePsr18Adapter\NetworkException;
 use AlexTartan\GuzzlePsr18Adapter\RequestException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
@@ -17,60 +19,55 @@ use Psr\Http\Message\RequestInterface;
  */
 final class BasePsr18ExceptionTest extends TestCase
 {
-    public function testConstructClientException()
-    {
-        $request   = $this->createMock(RequestInterface::class);
-        $exception = ClientException::fromRequest($request, 'msg', 123);
+    /**@var RequestInterface|MockObject $request */
+    private $request;
 
-        self::assertInstanceOf(ClientException::class, $exception);
-        self::assertInstanceOf(ClientExceptionInterface::class, $exception);
-        self::assertSame('msg', $exception->getMessage());
-        self::assertSame(123, $exception->getCode());
+    public function setUp()
+    {
+        parent::setUp();
+        $this->request = $this->createMock(RequestInterface::class);
     }
 
-    public function testConstructRequestException()
+    /**
+     * @dataProvider constructorDataProvider
+     */
+    public function testConstruct(string $className, string $parentClassName, string $message, int $code)
     {
-        $request   = $this->createMock(RequestInterface::class);
-        $exception = RequestException::fromRequest($request, 'msg', 123);
+        /** @var BasePsr18Exception $className */
+        $exception = $className::fromRequest($this->request, $message, $code);
 
-        self::assertInstanceOf(RequestException::class, $exception);
-        self::assertInstanceOf(RequestExceptionInterface::class, $exception);
-        self::assertSame('msg', $exception->getMessage());
-        self::assertSame(123, $exception->getCode());
+        self::assertInstanceOf($className, $exception);
+        self::assertInstanceOf($parentClassName, $exception);
+        self::assertSame($message, $exception->getMessage());
+        self::assertSame($code, $exception->getCode());
     }
 
-    public function testConstructNetworkException()
+    /**
+     * @dataProvider getRequestDataProvider
+     */
+    public function testGetRequest(string $className)
     {
-        $request   = $this->createMock(RequestInterface::class);
-        $exception = NetworkException::fromRequest($request, 'msg', 123);
+        /** @var BasePsr18Exception $className */
+        $exception = $className::fromRequest($this->request);
 
-        self::assertInstanceOf(NetworkException::class, $exception);
-        self::assertInstanceOf(NetworkExceptionInterface::class, $exception);
-        self::assertSame('msg', $exception->getMessage());
-        self::assertSame(123, $exception->getCode());
+        self::assertSame($this->request, $exception->getRequest());
     }
 
-    public function testGetRequestFromNetworkException()
+    public function getRequestDataProvider(): array
     {
-        $request   = $this->createMock(RequestInterface::class);
-        $exception = NetworkException::fromRequest($request, 'msg', 123);
-
-        self::assertSame($request, $exception->getRequest());
+        return [
+            [NetworkException::class],
+            [RequestException::class],
+            [ClientException::class],
+        ];
     }
 
-    public function testGetRequestFromRequestException()
+    public function constructorDataProvider(): array
     {
-        $request   = $this->createMock(RequestInterface::class);
-        $exception = RequestException::fromRequest($request, 'msg', 123);
-
-        self::assertSame($request, $exception->getRequest());
-    }
-
-    public function testGetRequestFromClientException()
-    {
-        $request   = $this->createMock(RequestInterface::class);
-        $exception = ClientException::fromRequest($request, 'msg', 123);
-
-        self::assertSame($request, $exception->getRequest());
+        return [
+            [NetworkException::class, NetworkExceptionInterface::class, 'msg1', 123],
+            [RequestException::class, RequestExceptionInterface::class, 'msg2', 456],
+            [ClientException::class, ClientExceptionInterface::class, 'msg3', 789],
+        ];
     }
 }
