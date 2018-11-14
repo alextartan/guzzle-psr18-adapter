@@ -13,6 +13,12 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \AlexTartan\GuzzlePsr18Adapter\Client
+ * @covers \AlexTartan\GuzzlePsr18Adapter\ClientException
+ * @covers \AlexTartan\GuzzlePsr18Adapter\NetworkException
+ * @covers \AlexTartan\GuzzlePsr18Adapter\RequestException
+ */
 final class ClientTest extends TestCase
 {
     /** @var Client */
@@ -34,10 +40,9 @@ final class ClientTest extends TestCase
 
     public function testThrowsRequestException()
     {
-        $this->expectException(RequestException::class);
-
-        $request = new Request('GET', 'https://some-domain.com/404');
-        $client  = new Client([
+        $exceptionCaught = false;
+        $request         = new Request('GET', 'https://some-domain.com/404');
+        $client          = new Client([
             'handler' => new MockHandler(
                 [
                     new \GuzzleHttp\Exception\RequestException(
@@ -47,7 +52,17 @@ final class ClientTest extends TestCase
                 ]
             ),
         ]);
-        $client->sendRequest($request);
+
+        try {
+            $client->sendRequest($request);
+        } catch (RequestException $re) {
+            $exceptionCaught = true;
+
+            // and also check that the request object can be retrieved
+            self::assertSame($request, $re->getRequest());
+        }
+
+        self::assertTrue($exceptionCaught);
     }
 
     public function testThrowsClientException()
@@ -63,7 +78,7 @@ final class ClientTest extends TestCase
         } catch (ClientException $ce) {
             $exceptionCaught = true;
 
-            // and also check that the request object can be retireved
+            // and also check that the request object can be retrieved
             self::assertSame($request, $ce->getRequest());
         }
 
@@ -90,7 +105,7 @@ final class ClientTest extends TestCase
         } catch (NetworkException $ce) {
             $exceptionCaught = true;
 
-            // and also check that the request object can be retireved
+            // and also check that the request object can be retrieved
             self::assertSame($request, $ce->getRequest());
         }
 
