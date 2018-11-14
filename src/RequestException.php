@@ -14,6 +14,9 @@ final class RequestException extends Exception implements RequestExceptionInterf
     private $request;
 
     /**
+     * PHP>7.2 allows overriding a public constructor with a private one,
+     * but prior to this version, it throws a fatal error.
+     *
      * Marking as internal to force passing the RequestInterface parameter as required by PSR-18
      *
      * @internal

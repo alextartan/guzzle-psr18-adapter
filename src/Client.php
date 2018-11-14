@@ -15,6 +15,12 @@ final class Client extends GuzzleClient implements ClientInterface
 {
 
     /**
+     * As required by PSR-18, this method needs to throw specific exceptions.
+     * Catching Guzzle exceptions and re-throwing them as PSR-18 compliant exceptions.
+     *
+     * @see https://www.php-fig.org/psr/psr-18/#error-handling
+     * @see http://docs.guzzlephp.org/en/stable/quickstart.html#exceptions
+     *
      * @throws ClientException
      * @throws NetworkException
      * @throws RequestException
