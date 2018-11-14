@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace AlexTartan\GuzzlePsr18Adapter;
 
 use Exception;
-use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\RequestExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Throwable;
 
-final class ClientException extends Exception implements ClientExceptionInterface
+final class RequestException extends Exception implements RequestExceptionInterface
 {
     /** @ var RequestInterface */
     private $request;
