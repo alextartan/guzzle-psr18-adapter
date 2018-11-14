@@ -13,7 +13,6 @@ use Psr\Http\Message\ResponseInterface;
 
 final class Client extends GuzzleClient implements ClientInterface
 {
-
     /**
      * As required by PSR-18, this method needs to throw specific exceptions.
      * Catching Guzzle exceptions and re-throwing them as PSR-18 compliant exceptions.
