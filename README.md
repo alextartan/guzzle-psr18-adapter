@@ -20,6 +20,42 @@ The easiest way is to use `composer`:
 
 Note: requires `PHP` >= 7.0
 
+Usage
+===
+
+Example:
+
+```
+<?php
+
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\NetworkExceptionInterface;
+use Psr\Http\Client\RequestExceptionInterface;
+use GuzzleHttp\Psr7\Request;
+
+[...]
+
+public function sendSomething(ClientInterface $client, $data)
+{
+    // Using GuzzleHttp\Psr7\Request in this example, but any implementation of PSR-7 will do
+    $request = new Request('GET', 'https://some-domain.com/something');
+    try{
+        // response is also an implementation of PSR-7 (Psr\Http\Message\ResponseInterface)
+        $response = $client->sendRequest($request)
+    } catch(ClientException $e){
+        // do something
+    } catch(NetworkException $e){
+        // do something
+    } catch(RequestException $e){
+        // do something
+    }
+}
+
+[...]
+
+```
+
 Issues and pull requests.
 ===
 

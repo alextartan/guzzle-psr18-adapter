@@ -31,7 +31,7 @@ final class BasePsr18ExceptionTest extends TestCase
     /**
      * @dataProvider constructorDataProvider
      */
-    public function testConstruct(string $className, string $parentClassName, string $message, int $code)
+    public function testConstruct(string $className, string $parentClassName, string $message, int $code): void
     {
         /** @var BasePsr18Exception $className */
         $exception = $className::fromRequest($this->request, $message, $code);
@@ -45,7 +45,7 @@ final class BasePsr18ExceptionTest extends TestCase
     /**
      * @dataProvider getRequestDataProvider
      */
-    public function testGetRequest(string $className)
+    public function testGetRequest(string $className): void
     {
         /** @var BasePsr18Exception $className */
         $exception = $className::fromRequest($this->request);

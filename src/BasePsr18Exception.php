@@ -12,15 +12,7 @@ abstract class BasePsr18Exception extends Exception
     /** @var RequestInterface */
     protected $request;
 
-    /**
-     * PHP>7.2 allows overriding a public constructor with a private one,
-     * but prior to this version, it throws a fatal error.
-     *
-     * Marking as internal to force passing the RequestInterface parameter as required by PSR-18
-     *
-     * @internal
-     */
-    public function __construct(string $message = '', int $code = 0, Throwable $previous = null)
+    private function __construct(string $message = '', int $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

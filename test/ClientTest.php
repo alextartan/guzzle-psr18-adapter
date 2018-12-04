@@ -12,6 +12,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @covers \AlexTartan\GuzzlePsr18Adapter\Client
@@ -31,14 +32,15 @@ final class ClientTest extends TestCase
         $this->client = new Client(['handler' => new MockHandler([new Response()])]);
     }
 
-    public function testSendRequest()
+    public function testSendRequest(): void
     {
         $request = new Request('GET', 'http://some-domain.com');
         $r       = $this->client->sendRequest($request);
-        TestCase::assertEquals(200, $r->getStatusCode());
+        self::assertEquals(200, $r->getStatusCode());
+        self::assertInstanceOf(ResponseInterface::class, $r);
     }
 
-    public function testThrowsRequestException()
+    public function testThrowsRequestException(): void
     {
         $exceptionCaught = false;
         $request         = new Request('GET', 'https://some-domain.com/404');
@@ -65,7 +67,7 @@ final class ClientTest extends TestCase
         self::assertTrue($exceptionCaught);
     }
 
-    public function testThrowsClientException()
+    public function testThrowsClientException(): void
     {
         $exceptionCaught = false;
         $request         = new Request('GET', 'http://foo.com');
@@ -85,7 +87,7 @@ final class ClientTest extends TestCase
         self::assertTrue($exceptionCaught);
     }
 
-    public function testThrowsNetworkException()
+    public function testThrowsNetworkException(): void
     {
         $exceptionCaught = false;
         $request         = new Request('GET', 'https://some-domain.com/404');
