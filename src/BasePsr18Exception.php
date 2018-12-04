@@ -19,8 +19,8 @@ abstract class BasePsr18Exception extends Exception
 
     public static function fromRequest(
         RequestInterface $request,
-        $message = '',
-        $code = 0,
+        string $message = '',
+        int $code = 0,
         Throwable $previous = null
     ): self {
         $exception          = new static($message, $code, $previous);

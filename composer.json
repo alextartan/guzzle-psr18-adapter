@@ -24,9 +24,12 @@
   "require-dev": {
     "ext-xml": "*",
     "ext-mbstring": "*",
-    "phpunit/phpunit": "^6.5.12",
+    "phpunit/phpunit": "^7.4",
     "zendframework/zend-coding-standard": "^1.0.0",
     "php-coveralls/php-coveralls": "^2.1.0",
+    "phpstan/phpstan": "0.10.*",
+    "phpstan/phpstan-strict-rules": "0.10.*",
+    "phpstan/phpstan-phpunit": "0.10",
     "roave/security-advisories": "dev-master"
   },
   "autoload": {
@@ -43,6 +46,7 @@
     "cs-check": "vendor/bin/phpcs",
     "cs-fix": "vendor/bin/phpcbf",
     "test": "vendor/bin/phpunit --colors=always",
+    "phpstan": "vendor/bin/phpstan analyse",
     "test-coverage": "vendor/bin/phpunit --colors=always --coverage-clover clover.xml",
     "upload-coverage": "vendor/bin/php-coveralls -v"
   }

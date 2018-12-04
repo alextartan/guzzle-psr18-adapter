@@ -19,10 +19,10 @@ use Psr\Http\Message\RequestInterface;
  */
 final class BasePsr18ExceptionTest extends TestCase
 {
-    /**@var RequestInterface|MockObject $request */
+    /** @var RequestInterface|MockObject */
     private $request;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->request = $this->createMock(RequestInterface::class);

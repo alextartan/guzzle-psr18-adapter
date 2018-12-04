@@ -12,7 +12,6 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * @covers \AlexTartan\GuzzlePsr18Adapter\Client
@@ -25,7 +24,7 @@ final class ClientTest extends TestCase
     /** @var Client */
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -37,7 +36,6 @@ final class ClientTest extends TestCase
         $request = new Request('GET', 'http://some-domain.com');
         $r       = $this->client->sendRequest($request);
         self::assertEquals(200, $r->getStatusCode());
-        self::assertInstanceOf(ResponseInterface::class, $r);
     }
 
     public function testThrowsRequestException(): void
