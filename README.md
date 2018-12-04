@@ -18,7 +18,7 @@ The easiest way is to use `composer`:
 
     composer require alextartan/guzzle-psr18-adapter
 
-Note: requires `PHP` >= 7.0
+Note: requires `PHP` >= 7.2
 
 Usage
 ===
