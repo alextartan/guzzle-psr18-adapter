@@ -7,6 +7,8 @@ use AlexTartan\GuzzlePsr18Adapter\Client;
 use AlexTartan\GuzzlePsr18Adapter\ClientException;
 use AlexTartan\GuzzlePsr18Adapter\NetworkException;
 use AlexTartan\GuzzlePsr18Adapter\RequestException;
+use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
+use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
@@ -45,7 +47,7 @@ final class ClientTest extends TestCase
         $client          = new Client([
             'handler' => new MockHandler(
                 [
-                    new \GuzzleHttp\Exception\RequestException(
+                    new GuzzleRequestException(
                         'Error Communicating with Server',
                         new Request('GET', 'test')
                     ),
@@ -92,7 +94,7 @@ final class ClientTest extends TestCase
         $client          = new Client([
             'handler' => new MockHandler(
                 [
-                    new \GuzzleHttp\Exception\ConnectException(
+                    new GuzzleConnectException(
                         'Error Communicating with Server',
                         new Request('GET', 'test')
                     ),

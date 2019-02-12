@@ -36,8 +36,11 @@ final class BasePsr18ExceptionTest extends TestCase
         /** @var BasePsr18Exception $className */
         $exception = $className::fromRequest($this->request, $message, $code);
 
+        /** @noinspection UnnecessaryAssertionInspection */
         self::assertInstanceOf($className, $exception);
+        /** @noinspection UnnecessaryAssertionInspection */
         self::assertInstanceOf($parentClassName, $exception);
+
         self::assertSame($message, $exception->getMessage());
         self::assertSame($code, $exception->getCode());
     }
