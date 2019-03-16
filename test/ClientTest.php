@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace AlexTartanTest\GuzzlePsr18Adapter;
 
 use AlexTartan\GuzzlePsr18Adapter\Client;
-use AlexTartan\GuzzlePsr18Adapter\ClientException;
 use AlexTartan\GuzzlePsr18Adapter\NetworkException;
 use AlexTartan\GuzzlePsr18Adapter\RequestException;
+use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use GuzzleHttp\Handler\MockHandler;
@@ -14,6 +14,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * @covers \AlexTartan\GuzzlePsr18Adapter\Client
@@ -23,6 +24,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class ClientTest extends TestCase
 {
+
     /** @var Client */
     private $client;
 
@@ -44,16 +46,18 @@ final class ClientTest extends TestCase
     {
         $exceptionCaught = false;
         $request         = new Request('GET', 'https://some-domain.com/404');
-        $client          = new Client([
-            'handler' => new MockHandler(
-                [
-                    new GuzzleRequestException(
-                        'Error Communicating with Server',
-                        new Request('GET', 'test')
-                    ),
-                ]
-            ),
-        ]);
+        $client          = new Client(
+            [
+                'handler' => new MockHandler(
+                    [
+                        new GuzzleRequestException(
+                            'Error Communicating with Server',
+                            new Request('GET', 'test')
+                        ),
+                    ]
+                ),
+            ]
+        );
 
         try {
             $client->sendRequest($request);
@@ -67,40 +71,70 @@ final class ClientTest extends TestCase
         self::assertTrue($exceptionCaught);
     }
 
-    public function testThrowsClientException(): void
+    public function testClientErrorCodeDoesNotThrowException(): void
+    {
+        $request  = new Request('GET', 'http://foo.com');
+        $mock     = new MockHandler([new Response(404)]);
+        $handler  = HandlerStack::create($mock);
+        $client   = new Client(['handler' => $handler]);
+        $response = $client->sendRequest($request);
+
+        self::assertSame(404, $response->getStatusCode());
+    }
+
+    public function testCatchGuzzleClientException(): void
     {
         $exceptionCaught = false;
-        $request         = new Request('GET', 'http://foo.com');
+        $request         = new Request('GET', 'https://some-domain.com/404');
+        $client          = new Client(
+            [
+                'handler' => new MockHandler(
+                    [
+                        new GuzzleClientException(
+                            'got 4xx response',
+                            new Request('GET', 'test')
+                        ),
+                    ]
+                ),
+            ]
+        );
 
         try {
-            $mock    = new MockHandler([new Response(404)]);
-            $handler = HandlerStack::create($mock);
-            $client  = new Client(['handler' => $handler]);
             $client->sendRequest($request);
-        } catch (ClientException $ce) {
+        } catch (ClientExceptionInterface $ce) {
             $exceptionCaught = true;
-
-            // and also check that the request object can be retrieved
-            self::assertSame($request, $ce->getRequest());
         }
 
         self::assertTrue($exceptionCaught);
+    }
+
+    public function testServerErrorCodeDoesNotThrowException(): void
+    {
+        $request  = new Request('GET', 'http://foo.com');
+        $mock     = new MockHandler([new Response(501)]);
+        $handler  = HandlerStack::create($mock);
+        $client   = new Client(['handler' => $handler]);
+        $response = $client->sendRequest($request);
+
+        self::assertSame(501, $response->getStatusCode());
     }
 
     public function testThrowsNetworkException(): void
     {
         $exceptionCaught = false;
         $request         = new Request('GET', 'https://some-domain.com/404');
-        $client          = new Client([
-            'handler' => new MockHandler(
-                [
-                    new GuzzleConnectException(
-                        'Error Communicating with Server',
-                        new Request('GET', 'test')
-                    ),
-                ]
-            ),
-        ]);
+        $client          = new Client(
+            [
+                'handler' => new MockHandler(
+                    [
+                        new GuzzleConnectException(
+                            'Error Communicating with Server',
+                            new Request('GET', 'test')
+                        ),
+                    ]
+                ),
+            ]
+        );
 
         try {
             $client->sendRequest($request);
