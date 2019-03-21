@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace AlexTartan\GuzzlePsr18Adapter;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
@@ -11,11 +12,9 @@ use GuzzleHttp\Exception\ServerException as GuzzleServerException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use TypeError;
 
 final class Client extends GuzzleClient implements ClientInterface
 {
-
     /**
      * As required by PSR-18, this method needs to throw specific exceptions.
      * Catching Guzzle exceptions and re-throwing them as PSR-18 compliant exceptions.
@@ -31,22 +30,9 @@ final class Client extends GuzzleClient implements ClientInterface
     {
         try {
             return $this->send($request);
-        } catch (GuzzleClientException $gCliEx) {
-            // This is thrown for 4xx response status codes.
-            try {
-                return $gCliEx->getResponse();
-            } catch (TypeError $te) {
-                // response is not a ResponseInterface instance
-                throw ClientException::fromRequest($request, $te->getMessage(), $te->getCode());
-            }
-        } catch (GuzzleServerException $gSrvEx) {
-            // This is thrown for 5xx response status codes.
-            try {
-                return $gSrvEx->getResponse();
-            } catch (TypeError $te) {
-                // response is not a ResponseInterface instance
-                throw ClientException::fromRequest($request, $te->getMessage(), $te->getCode());
-            }
+        } catch (GuzzleClientException|GuzzleServerException $gEx) {
+            // This is thrown for 4xx of 5xx response status codes.
+            return $this->extractGuzzleExceptionResponse($gEx, $request);
         } catch (GuzzleConnectException $gConEx) {
             // Network connectivity errors
             throw NetworkException::fromRequest($request, $gConEx->getMessage(), $gConEx->getCode());
@@ -57,5 +43,16 @@ final class Client extends GuzzleClient implements ClientInterface
             // Request could not be sent
             throw ClientException::fromRequest($request, $t->getMessage(), $t->getCode());
         }
+    }
+
+    private function extractGuzzleExceptionResponse(BadResponseException $exception, RequestInterface $request): ResponseInterface
+    {
+        $guzzleResponse = $exception->getResponse();
+        if ($guzzleResponse === null) {
+            // response is not a ResponseInterface instance
+            throw ClientException::fromRequest($request, $exception->getMessage(), $exception->getCode());
+        }
+
+        return $guzzleResponse;
     }
 }
