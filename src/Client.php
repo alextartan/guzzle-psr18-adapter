@@ -30,7 +30,7 @@ final class Client extends GuzzleClient implements ClientInterface
     {
         try {
             return $this->send($request);
-        } catch (GuzzleClientException|GuzzleServerException $gEx) {
+        } catch (GuzzleClientException | GuzzleServerException $gEx) {
             // This is thrown for 4xx of 5xx response status codes.
             return $this->extractGuzzleExceptionResponse($gEx, $request);
         } catch (GuzzleConnectException $gConEx) {
