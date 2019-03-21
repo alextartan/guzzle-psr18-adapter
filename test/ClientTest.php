@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace AlexTartanTest\GuzzlePsr18Adapter;
 
 use AlexTartan\GuzzlePsr18Adapter\Client;
-use AlexTartan\GuzzlePsr18Adapter\NetworkException;
-use AlexTartan\GuzzlePsr18Adapter\RequestException;
+use Exception;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
@@ -15,6 +14,8 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\NetworkExceptionInterface;
+use Psr\Http\Client\RequestExceptionInterface;
 
 /**
  * @covers \AlexTartan\GuzzlePsr18Adapter\Client
@@ -42,35 +43,6 @@ final class ClientTest extends TestCase
         self::assertEquals(200, $r->getStatusCode());
     }
 
-    public function testThrowsRequestException(): void
-    {
-        $exceptionCaught = false;
-        $request         = new Request('GET', 'https://some-domain.com/404');
-        $client          = new Client(
-            [
-                'handler' => new MockHandler(
-                    [
-                        new GuzzleRequestException(
-                            'Error Communicating with Server',
-                            new Request('GET', 'test')
-                        ),
-                    ]
-                ),
-            ]
-        );
-
-        try {
-            $client->sendRequest($request);
-        } catch (RequestException $re) {
-            $exceptionCaught = true;
-
-            // and also check that the request object can be retrieved
-            self::assertSame($request, $re->getRequest());
-        }
-
-        self::assertTrue($exceptionCaught);
-    }
-
     public function testClientErrorCodeDoesNotThrowException(): void
     {
         $request  = new Request('GET', 'http://foo.com');
@@ -80,32 +52,6 @@ final class ClientTest extends TestCase
         $response = $client->sendRequest($request);
 
         self::assertSame(404, $response->getStatusCode());
-    }
-
-    public function testCatchGuzzleClientException(): void
-    {
-        $exceptionCaught = false;
-        $request         = new Request('GET', 'https://some-domain.com/404');
-        $client          = new Client(
-            [
-                'handler' => new MockHandler(
-                    [
-                        new GuzzleClientException(
-                            'got 4xx response',
-                            new Request('GET', 'test')
-                        ),
-                    ]
-                ),
-            ]
-        );
-
-        try {
-            $client->sendRequest($request);
-        } catch (ClientExceptionInterface $ce) {
-            $exceptionCaught = true;
-        }
-
-        self::assertTrue($exceptionCaught);
     }
 
     public function testServerErrorCodeDoesNotThrowException(): void
@@ -119,32 +65,54 @@ final class ClientTest extends TestCase
         self::assertSame(501, $response->getStatusCode());
     }
 
-    public function testThrowsNetworkException(): void
+    /** @dataProvider exceptionDataProvider */
+    public function testThrowsRequestException(string $expectedExceptionClass, Exception $expectedException): void
     {
-        $exceptionCaught = false;
-        $request         = new Request('GET', 'https://some-domain.com/404');
-        $client          = new Client(
+        $this->expectException($expectedExceptionClass);
+
+        $request = new Request('GET', 'https://some-domain.com/404');
+        $client  = new Client(
             [
                 'handler' => new MockHandler(
                     [
-                        new GuzzleConnectException(
-                            'Error Communicating with Server',
-                            new Request('GET', 'test')
-                        ),
+                        $expectedException,
                     ]
                 ),
             ]
         );
 
-        try {
-            $client->sendRequest($request);
-        } catch (NetworkException $ce) {
-            $exceptionCaught = true;
+        $client->sendRequest($request);
+    }
 
-            // and also check that the request object can be retrieved
-            self::assertSame($request, $ce->getRequest());
-        }
-
-        self::assertTrue($exceptionCaught);
+    public function exceptionDataProvider(): array
+    {
+        return [
+            [
+                RequestExceptionInterface::class,
+                new GuzzleRequestException(
+                    'Error Communicating with Server',
+                    new Request('GET', 'test')
+                ),
+            ],
+            [
+                NetworkExceptionInterface::class,
+                new GuzzleConnectException(
+                    'Error Communicating with Server',
+                    new Request('GET', 'test')
+                ),
+            ],
+            [
+                ClientExceptionInterface::class,
+                new GuzzleClientException(
+                    'got 4xx response',
+                    new Request('GET', 'test'),
+                    null // new Response(501) -> still need to check that ClientExceptionInterface is thrown when Response is null
+                ),
+            ],
+            [
+                ClientExceptionInterface::class,
+                new Exception('Some random exception'),
+            ],
+        ];
     }
 }
