@@ -35,22 +35,22 @@ final class Client extends GuzzleClient implements ClientInterface
             return $this->extractGuzzleExceptionResponse($gEx, $request);
         } catch (GuzzleConnectException $gConEx) {
             // Network connectivity errors
-            throw NetworkException::fromRequest($request, $gConEx->getMessage(), $gConEx->getCode());
+            throw NetworkException::fromRequest($request, $gConEx->getMessage(), $gConEx->getCode(), $gConEx);
         } catch (GuzzleRequestException $gReqEx) {
             // Malformed request
-            throw RequestException::fromRequest($request, $gReqEx->getMessage(), $gReqEx->getCode());
+            throw RequestException::fromRequest($request, $gReqEx->getMessage(), $gReqEx->getCode(), $gReqEx);
         } catch (\Throwable $t) {
             // Request could not be sent
-            throw ClientException::fromRequest($request, $t->getMessage(), $t->getCode());
+            throw ClientException::fromRequest($request, $t->getMessage(), $t->getCode(), $t);
         }
     }
 
     private function extractGuzzleExceptionResponse(BadResponseException $exception, RequestInterface $request): ResponseInterface
     {
         $guzzleResponse = $exception->getResponse();
-        if ($guzzleResponse === null) {
+        if (!$guzzleResponse instanceof ResponseInterface) {
             // response is not a ResponseInterface instance
-            throw ClientException::fromRequest($request, $exception->getMessage(), $exception->getCode());
+            throw ClientException::fromRequest($request, $exception->getMessage(), $exception->getCode(), $exception);
         }
 
         return $guzzleResponse;
