@@ -29,7 +29,7 @@ install:
 - export COLUMNS=120
 - composer show
 script:
-- if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
+- if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage && composer test-infection ; else composer test ; fi
 - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
 - if [[ $PHPSTAN == 'true' ]]; then composer phpstan ; fi
 after_script:

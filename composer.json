@@ -48,6 +48,7 @@
     "cs-fix": "vendor/bin/phpcbf",
     "test": "vendor/bin/phpunit --colors=always",
     "phpstan": "vendor/bin/phpstan analyse",
+    "test-infection": "vendor/bin/infection --threads=4",
     "test-coverage": "vendor/bin/phpunit --colors=always --coverage-clover clover.xml",
     "upload-coverage": "vendor/bin/php-coveralls -v"
   }
