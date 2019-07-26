@@ -9,7 +9,7 @@ Current build status
 [![Coverage Status](https://coveralls.io/repos/github/alextartan/guzzle-psr18-adapter/badge.svg?branch=master)](https://coveralls.io/github/alextartan/guzzle-psr18-adapter?branch=master)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/alextartan/guzzle-psr18-adapter/master)](https://infection.github.io)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alextartan/guzzle-psr18-adapter/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alextartan/guzzle-psr18-adapter/?branch=master)
-[![Packagist](https://img.shields.io/badge/Packagist-alextartan%2Fguzzle--psr18--adapter-blue.svg)](https://packagist.org/packages/alextartan/guzzle-psr18-adapter)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=alextartan/guzzle-psr18-adapter)](https://dependabot.com)
 [![Downloads](https://img.shields.io/badge/dynamic/json.svg?url=https://repo.packagist.org/packages/alextartan/guzzle-psr18-adapter.json&label=Downloads&query=$.package.downloads.total&colorB=orange)](https://packagist.org/packages/alextartan/guzzle-psr18-adapter)
 
 Install
