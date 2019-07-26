@@ -12,6 +12,7 @@ use GuzzleHttp\Exception\ServerException as GuzzleServerException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 final class Client extends GuzzleClient implements ClientInterface
 {
@@ -39,7 +40,7 @@ final class Client extends GuzzleClient implements ClientInterface
         } catch (GuzzleRequestException $gReqEx) {
             // Malformed request
             throw RequestException::fromRequest($request, $gReqEx->getMessage(), $gReqEx->getCode(), $gReqEx);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
             // Request could not be sent
             throw ClientException::fromRequest($request, $t->getMessage(), $t->getCode(), $t);
         }
