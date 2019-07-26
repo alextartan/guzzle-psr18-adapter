@@ -24,7 +24,7 @@
   "require-dev": {
     "ext-xml": "*",
     "ext-mbstring": "*",
-    "infection/infection": "0.9.*",
+    "infection/infection": "0.9.* || 0.13.*",
     "phpunit/phpunit": "~8.0",
     "zendframework/zend-coding-standard": "^1.0.0",
     "php-coveralls/php-coveralls": "~2.1",
