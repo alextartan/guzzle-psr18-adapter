@@ -10,11 +10,6 @@ matrix:
     - CS_CHECK=true
     - TEST_COVERAGE=true
     - PHPSTAN=true
-  - php: 7.3
-    env:
-    - CS_CHECK=false
-    - TEST_COVERAGE=false
-    - PHPSTAN=false
 before_install:
 - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
 - travis_retry composer self-update
