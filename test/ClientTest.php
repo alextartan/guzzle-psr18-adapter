@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AlexTartanTest\GuzzlePsr18Adapter;
@@ -65,7 +66,11 @@ final class ClientTest extends TestCase
         self::assertSame(501, $response->getStatusCode());
     }
 
-    /** @dataProvider exceptionDataProvider */
+    /**
+     * @param class-string<\Throwable> $expectedExceptionClass
+     *
+     * @dataProvider exceptionDataProvider
+     */
     public function testThrowsRequestException(string $expectedExceptionClass, Exception $expectedException): void
     {
         $this->expectException($expectedExceptionClass);
@@ -84,6 +89,9 @@ final class ClientTest extends TestCase
         $client->sendRequest($request);
     }
 
+    /**
+     * @return array<int, array<mixed>>
+     */
     public function exceptionDataProvider(): array
     {
         return [

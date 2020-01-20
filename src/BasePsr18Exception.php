@@ -9,10 +9,9 @@ use Throwable;
 
 abstract class BasePsr18Exception extends Exception
 {
-    /** @var RequestInterface */
-    protected $request;
+    protected RequestInterface $request;
 
-    private function __construct(string $message, int $code, ?Throwable $previous)
+    final private function __construct(string $message, int $code, ?Throwable $previous)
     {
         parent::__construct($message, $code, $previous);
     }

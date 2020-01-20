@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace AlexTartanTest\GuzzlePsr18Adapter;
@@ -31,17 +32,14 @@ final class BasePsr18ExceptionTest extends TestCase
     }
 
     /**
+     * @param        class-string $className
+     *
      * @dataProvider constructorDataProvider
      */
     public function testConstruct(string $className, string $parentClassName, string $message, int $code, ?Throwable $previousException): void
     {
         /** @var BasePsr18Exception $className */
         $exception = $className::fromRequest($this->request, $message, $code, $previousException);
-
-        /** @noinspection UnnecessaryAssertionInspection */
-        self::assertInstanceOf($className, $exception);
-        /** @noinspection UnnecessaryAssertionInspection */
-        self::assertInstanceOf($parentClassName, $exception);
 
         self::assertSame($message, $exception->getMessage());
         self::assertSame($code, $exception->getCode());
@@ -59,6 +57,7 @@ final class BasePsr18ExceptionTest extends TestCase
         self::assertSame($this->request, $exception->getRequest());
     }
 
+    /** @return array<int, array<int, string-class>> */
     public function getRequestDataProvider(): array
     {
         return [
@@ -68,6 +67,7 @@ final class BasePsr18ExceptionTest extends TestCase
         ];
     }
 
+    /** @return array<int, array<mixed>> */
     public function constructorDataProvider(): array
     {
         $previousException = new Exception('this happened before the psr18 exception');
