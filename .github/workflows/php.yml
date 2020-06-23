@@ -35,9 +35,9 @@ jobs:
 
     - name: Tests
       run: composer run-script test-coverage
-
-    - name: Upload coverage to coveralls
-      run: composer run-script upload-coverage
+      
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v1.1.1
 
     - name: PhpStan
       run: composer run-script phpstan
