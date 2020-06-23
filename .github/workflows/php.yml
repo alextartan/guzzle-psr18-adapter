@@ -30,8 +30,14 @@ jobs:
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+    - name: Codestyle checks
+      run: composer run-script cs-check
 
-    - name: Run test suite
-      run: composer run-script test
+    - name: Tests
+      run: composer run-script test-coverage
+
+    - name: Upload coverage to coveralls
+      run: composer run-script upload-coverage
+
+    - name: PhpStan
+      run: composer run-script phpstan
