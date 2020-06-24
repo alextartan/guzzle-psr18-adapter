@@ -5,7 +5,7 @@ Wrapper over Guzzle to comply with PSR-18
 Current build status
 ===
 
-[![Build Status](https://travis-ci.org/alextartan/guzzle-psr18-adapter.svg?branch=master)](https://travis-ci.org/alextartan/guzzle-psr18-adapter)
+![CI](https://github.com/alextartan/guzzle-psr18-adapter/workflows/CI/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/alextartan/guzzle-psr18-adapter/branch/master/graph/badge.svg)](https://codecov.io/gh/alextartan/guzzle-psr18-adapter)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/alextartan/guzzle-psr18-adapter/master)](https://infection.github.io)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=alextartan/guzzle-psr18-adapter)](https://dependabot.com)
