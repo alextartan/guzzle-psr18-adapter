@@ -34,12 +34,10 @@ jobs:
       run: composer run-script cs-check
 
     - name: Tests
-      run: composer run-script test-coverage
+      run: composer run-script test-coverage -- --coverage-clover=coverage.xml
       
-    - name: Coveralls GitHub Action
-      uses: coverallsapp/github-action@v1.1.1
-      with:
-        github-token: ${{ secrets.github_token }}
+    - name: Codecov
+      run: bash <(curl -s https://codecov.io/bash)
 
     - name: PhpStan
       run: composer run-script phpstan
