@@ -3504,22 +3504,24 @@
         },
         {
             "name": "symfony/config",
-            "version": "v5.0.2",
+            "version": "v5.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "7f930484966350906185ba0a604728f7898b7ba0"
+                "reference": "b8623ef3d99fe62a34baf7a111b576216965f880"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/7f930484966350906185ba0a604728f7898b7ba0",
-                "reference": "7f930484966350906185ba0a604728f7898b7ba0",
+                "url": "https://api.github.com/repos/symfony/config/zipball/b8623ef3d99fe62a34baf7a111b576216965f880",
+                "reference": "b8623ef3d99fe62a34baf7a111b576216965f880",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2.5",
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
                 "symfony/filesystem": "^4.4|^5.0",
-                "symfony/polyfill-ctype": "~1.8"
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-php80": "^1.15"
             },
             "conflict": {
                 "symfony/finder": "<4.4"
@@ -3537,7 +3539,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "5.1-dev"
                 }
             },
             "autoload": {
@@ -3564,7 +3566,21 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2019-12-18T13:50:31+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-23T13:08:13+00:00"
         },
         {
             "name": "symfony/console",
@@ -3658,6 +3674,66 @@
                 }
             ],
             "time": "2020-06-15T12:59:21+00:00"
+        },
+        {
+            "name": "symfony/deprecation-contracts",
+            "version": "v2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/deprecation-contracts.git",
+                "reference": "dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337",
+                "reference": "dd99cb3a0aff6cadd2a8d7d7ed72c2161e218337",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "function.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A generic function and convention to trigger deprecation notices",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-27T08:34:37+00:00"
         },
         {
             "name": "symfony/filesystem",
