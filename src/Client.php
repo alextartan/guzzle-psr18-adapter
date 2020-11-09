@@ -10,12 +10,11 @@ use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
 use GuzzleHttp\Exception\ServerException as GuzzleServerException;
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
-final class Client extends GuzzleClient implements ClientInterface
+final class Client extends GuzzleClient
 {
     /**
      * As required by PSR-18, this method needs to throw specific exceptions.
@@ -49,12 +48,11 @@ final class Client extends GuzzleClient implements ClientInterface
 
     private function extractGuzzleExceptionResponse(BadResponseException $exception, RequestInterface $request): ResponseInterface
     {
-        $guzzleResponse = $exception->getResponse();
-        if (!$guzzleResponse instanceof ResponseInterface) {
+        if (!$exception->hasResponse()) {
             // response is not a ResponseInterface instance
             throw ClientException::fromRequest($request, $exception->getMessage(), $exception->getCode(), $exception);
         }
 
-        return $guzzleResponse;
+        return $exception->getResponse();
     }
 }
