@@ -26,9 +26,7 @@ use Psr\Http\Client\RequestExceptionInterface;
  */
 final class ClientTest extends TestCase
 {
-
-    /** @var Client */
-    private $client;
+    private Client $client;
 
     public function setUp(): void
     {
@@ -67,7 +65,7 @@ final class ClientTest extends TestCase
     }
 
     /**
-     * @param class-string<\Throwable> $expectedExceptionClass
+     * @param        class-string<\Throwable> $expectedExceptionClass
      *
      * @dataProvider exceptionDataProvider
      */
@@ -111,10 +109,9 @@ final class ClientTest extends TestCase
             ],
             [
                 ClientExceptionInterface::class,
-                new GuzzleClientException(
-                    'got 4xx response',
+                GuzzleClientException::create(
                     new Request('GET', 'test'),
-                    null // new Response(501) -> still need to check that ClientExceptionInterface is thrown when Response is null
+                    null,
                 ),
             ],
             [
