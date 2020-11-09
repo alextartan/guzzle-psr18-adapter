@@ -48,11 +48,11 @@ final class Client extends GuzzleClient
 
     private function extractGuzzleExceptionResponse(BadResponseException $exception, RequestInterface $request): ResponseInterface
     {
-        if (!$exception->hasResponse()) {
-            // response is not a ResponseInterface instance
-            throw ClientException::fromRequest($request, $exception->getMessage(), $exception->getCode(), $exception);
+        if ($exception->hasResponse()) {
+            return $exception->getResponse();
         }
 
-        return $exception->getResponse();
+        // response is not a ResponseInterface instance
+        throw ClientException::fromRequest($request, $exception->getMessage(), $exception->getCode(), $exception);
     }
 }

@@ -18,12 +18,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\NetworkExceptionInterface;
 use Psr\Http\Client\RequestExceptionInterface;
 
-/**
- * @covers \AlexTartan\GuzzlePsr18Adapter\Client
- * @covers \AlexTartan\GuzzlePsr18Adapter\ClientException
- * @covers \AlexTartan\GuzzlePsr18Adapter\NetworkException
- * @covers \AlexTartan\GuzzlePsr18Adapter\RequestException
- */
 final class ClientTest extends TestCase
 {
     private Client $client;
@@ -117,6 +111,15 @@ final class ClientTest extends TestCase
             [
                 ClientExceptionInterface::class,
                 new Exception('Some random exception'),
+            ],
+            [
+                ClientExceptionInterface::class,
+                (function () {
+                    $exception = $this->createMock(GuzzleClientException::class);
+                    $exception->expects(self::once())->method('hasResponse')->willReturn(false);
+
+                    return $exception;
+                })(),
             ],
         ];
     }
