@@ -24,7 +24,7 @@
   "require-dev": {
     "ext-xml": "*",
     "ext-mbstring": "*",
-    "infection/infection": "^0.20",
+    "infection/infection": "^0.21",
     "phpunit/phpunit": "^9",
     "php-coveralls/php-coveralls": "^2.4",
     "phpstan/phpstan": "^0.12",
